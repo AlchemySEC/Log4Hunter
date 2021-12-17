@@ -17,4 +17,5 @@ While this script will find embedded versions of log4j, it will not find .JAR fi
 
 #References
 https://github.com/sp4ir/incidentresponse/blob/main/Get-Log4shellVuln.ps1
+
 https://github.com/1lann/log4shelldetect/blob/master/main.go
