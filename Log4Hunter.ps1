@@ -32,16 +32,17 @@ write-host
 write-host "# Hunting for .jar files (This may take awhile..)"
 
 #Create Job to identify all .JAR files.
-$jobName = Start-Job -ScriptBlock { $jarFiles = get-wmiobject win32_volume | ? { $_.DriveType -eq 3 -and $_.DriveLetter -ne $null } | % { get-psdrive $_.DriveLetter[0] } | Where-Object { $_.Name.length -eq 1 } | Select-Object -ExpandProperty Root | Get-ChildItem -File -Recurse -Filter $log4Filter -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName }
+$jobName = Start-Job -ScriptBlock { get-wmiobject win32_volume | ? { $_.DriveType -eq 3 -and $_.DriveLetter -ne $null } | % { get-psdrive $_.DriveLetter[0] } | Where-Object { $_.Name.length -eq 1 } | Select-Object -ExpandProperty Root | Get-ChildItem -File -Recurse -Filter "*.jar" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName }
 
 #Create loading animation while Job is still running.
 while($jobName.JobStateInfo.State -eq "Running") {
 	Write-Host '.' -NoNewline
 	Start-Sleep -Seconds 1
 }
+$jarFiles = Receive-Job -Job $jobName
+ 
 write-host
 
-$jarFiles = Get-PSDrive | Where-Object { $_.Name.length -eq 1 } | Select-Object -ExpandProperty Root | Get-ChildItem -File -Recurse -Filter $log4Filter -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
 write-host "# Examaning found .jar files."
 #Loop through all jar files looking for the JndiLookup class.
 foreach ($jarFile in $jarFiles) {
@@ -81,6 +82,9 @@ foreach ($jarFile in $jarFiles) {
             } elseif ($jarFile -like "*\log4j-*" ) {
                 write-host "Early or patched version of LOG4J Found, not vuln."
                 $log4jvuln = "FALSE"
+                if ($jndiclasspath -eq $NULL -and $implementationVersionarray_[0] -eq 1) {
+                    $jndiclasspath = "Not Present in 1.X Versions of Log4j"
+                }
             }
         } else {
             $implementationVersion = "N/A"
@@ -111,11 +115,13 @@ foreach ($jarFile in $jarFiles) {
     if ($jndiclasspath -ne $null) { Clear-Variable -Name "jndiclasspath" }
 }
 write-output "# Hunting Complete. Overall Results: "
-$resultsArray
-
-#Write array to disk.
-$datetime = Get-Date -Format "dd.MM.yyyy_HH-mm-ss";
-$file_name = "Log4JHunting_Result_" + $datetime + ".csv";
-$file_path = $logFolder + $file_name;
-
-$resultsArray | Export-Csv -Path "$file_path" -NoTypeInformation
+if ($resultsArray.count -gt 0) {
+    $resultsArray
+    #Write array to disk.
+    $datetime = Get-Date -Format "dd.MM.yyyy_HH-mm-ss";
+    $file_name = "Log4JHunting_Result_" + $datetime + ".csv";
+    $file_path = $logFolder + $file_name;
+    $resultsArray | Export-Csv -Path "$file_path" -NoTypeInformation
+} else {
+    write-host "# No LOG4J Instances Found!"
+}
