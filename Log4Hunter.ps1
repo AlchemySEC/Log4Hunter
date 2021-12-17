@@ -1,5 +1,7 @@
 <#
-    LOG4J Hunter 1.3.0, By Will Coulter @ AlchemySec.com.au 
+    LOG4J Hunter 1.3.0, By Will Coulter @ AlchemySec.com.au
+    Most recent version available @ https://github.com/AlchemySEC/Log4Hunter/blob/main/Log4Hunter.ps1
+    
     1. searches all disks for *.jar files 
     2. examines each file for the presence of the vulnerable 'JndiLookup.Class'
     3. examines the identified library for the presence of the patched code in the 'JmsAppender$Builder.class'.
