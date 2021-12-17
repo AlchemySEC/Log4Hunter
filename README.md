@@ -19,7 +19,7 @@ There is little configuration based into the  script, however you can control th
 #Limitations
 
 While this script will find embedded versions of log4j, it will not find .JAR files within .JAR files (yet).
-A native log4j .jar file will be identified vulnerable based on its version, however an embedded library is identified by identifying if the mitigation patch has been applied to the appropriate class. Because versioning is not available, embedded versinos of log4 prior to 2.16 will always be marked as vulnerable.
+A native log4j .jar file will be identified vulnerable based on its version, however an embedded library is identified by identifying if the mitigation patch has been applied to the appropriate class. Because versioning is not available, embedded versions of log4 prior to 2.16 will always be marked as vulnerable.
 
 
 #References
