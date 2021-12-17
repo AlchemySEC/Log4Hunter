@@ -6,7 +6,6 @@
     2. examines each file for the presence of the vulnerable 'JndiLookup.Class'
     3. examines the identified library for the presence of the patched code in the 'JmsAppender$Builder.class'.
     4. Outputs the result to disk (Default is C:\) for review and clearly marks the jar files that are vulnerable to Log4Shell/Log4Jam.
-
     This script was based off of the script created by SP4IR: https://github.com/sp4ir/incidentresponse/blob/35a2faae8512884bcd753f0de3fa1adc6ec326ed/Get-Log4shellVuln.ps1
     Note: While this script will identify log4j instances within .jar files, in its current version it will not recursively extract and examine nested .JAR files.
 #>
@@ -73,6 +72,16 @@ foreach ($jarFile in $jarFiles) {
         if ($implementationVersion -like '*Implementation-Version: *') { 
             $implementationVersion = $implementationVersion.ToString()
             $implementationVersion = $implementationVersion.Replace('Implementation-Version: ', '')
+
+            $implementationVersionarray_ = $implementationVersion.Replace('Implementation-Version: ', '').Split('.')
+
+            #If this is a native log4j file such as '\log4j-core-2.14.0.jar', then we trust that the versioning information in the manifest file is accurate to identify if the library is vulnerable.
+            if ($implementationVersionarray_[0] -eq 2 -and $implementationVersionarray_[1] -lt 16 -and $jarFile -like "*\log4j-*" ) {
+                $log4jvuln = "TRUE"
+            } elseif ($jarFile -like "*\log4j-*" ) {
+                write-host "Early or patched version of LOG4J Found, not vuln."
+                $log4jvuln = "FALSE"
+            }
         } else {
             $implementationVersion = "N/A"
         }
