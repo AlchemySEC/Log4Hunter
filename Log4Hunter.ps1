@@ -1,5 +1,5 @@
 <#
-    LOG4J Hunter 1.3.0, By Will Coulter @ AlchemySec.com.au
+    LOG4 Hunter 1.3.0, By Will Coulter @ AlchemySec.com.au
     Most recent version available @ https://github.com/AlchemySEC/Log4Hunter/blob/main/Log4Hunter.ps1
     
     1. searches all disks for *.jar files 
