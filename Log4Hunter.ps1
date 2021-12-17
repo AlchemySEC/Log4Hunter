@@ -99,7 +99,11 @@ foreach ($jarFile in $jarFiles) {
         $row = "" | SELECT JARFILE,JARVERSION,VULNERABLE,JNDICLASSPATH
         $row.JARFILE = "$($jarFile.ToString())"
         $row.JARVERSION = "$($implementationVersion.ToString())"
-        $row.VULNERABLE = "$log4jvuln"
+        if ($log4jvuln -eq $null) {
+            $row.VULNERABLE = "UNKNOWN"
+        } else {
+            $row.VULNERABLE = "$log4jvuln"
+        }
         $row.JNDICLASSPATH = "$jndiclasspath"
         $resultsArray += $row
         write-host "# $($jarFile.ToString()) Results: "
