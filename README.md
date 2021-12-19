@@ -36,7 +36,7 @@ A: This script is developed to identify all instances of Log4j, as 1.X.X is no l
 
 Q: Why does the script show a list of all .JAR files on the system?
 
-A: The script not only identified native log4 libraries (log4j-*.jar), but also identified embedded log4j libraries. In order to identify embedded instances we need to inspect all .jar files on the system. Eg; an application has been packaged with an embedded log4j lbirary that contains the vulnerable class which contains the log4shell vulnerability. 
+A: The script not only identified native log4 libraries (log4j-*.jar), but also identified embedded log4j libraries. In order to identify embedded instances we need to inspect all .jar files on the system. Eg; an application has been packaged with an embedded log4j library that contains the vulnerable class which contains the log4shell vulnerability. 
 
 Q: Will the script work if the version of Log4j is not recorded in the .JAR manifest file?
 
