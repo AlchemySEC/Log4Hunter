@@ -77,7 +77,7 @@ foreach ($jarFile in $jarFiles) {
             $implementationVersionarray_ = $implementationVersion.Replace('Implementation-Version: ', '').Split('.')
 
             #If this is a native log4j file such as '\log4j-core-2.14.0.jar', then we trust that the versioning information in the manifest file is accurate to identify if the library is vulnerable.
-            if ($implementationVersionarray_[0] -eq 2 -and $implementationVersionarray_[1] -lt 16 -and $jarFile -like "*\log4j-*" ) {
+            if ($implementationVersionarray_[0] -eq 2 -and $implementationVersionarray_[1] -lt 17 -and $jarFile -like "*\log4j-*" ) {
                 $log4jvuln = "TRUE"
             } elseif ($jarFile -like "*\log4j-*" ) {
                 write-host "Early or patched version of LOG4J Found, not vuln."
